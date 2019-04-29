@@ -22,12 +22,37 @@ router.post('/add', function(req, res, next) {
   
 });
 
+router.get('/edit', (req,res,next) => {
+  const {_id} = req.query; //deconstruction
+
+  Book.findOne({_id})// pass into object, always {} promise
+  .then((book)=> res.render('book-edit',{book}))
+  .catch((err)=> console.log(err));
+});
+
+//post 'books/edit'
+router.post('/edit', (req,res,next) => { 
+  const {_id} =req.query;
+  // console.log(('req.body',req.body));
+  const {id} = req.query;
+  const {title,author,description,rating} = req.body;
+  
+  Book.findOneAndUpdate({_id},{$set:{title,author,description,rating}})
+  .then((data) => res.redirect('/books'))
+  .catch((err) => console.log(err))
+  
+});
 
 //GET '/books'
 router.get('/', (req,res,next) => {
   Book.find({})
   .then((allTheBooksFromDB)=> res.render('books',{allTheBooksFromDB}))
   .catch((err)=> console.log(err))
+});
+
+//GET 'books/details/:bookId'
+router.get('/details/:bookId',(req,res, next) =>{
+console.log(('req.params',req.params))
 });
 
 
